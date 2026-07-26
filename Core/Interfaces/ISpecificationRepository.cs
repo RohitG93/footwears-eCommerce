@@ -12,6 +12,14 @@ public interface ISpecificationRepository<T>
     Expression<Func<T, object>>? OrderByDescending { get; }
 
     bool IsDistinct { get; }
+
+    int PageSize { get; }
+
+    int PageIndex { get; }
+
+    bool IsPagingEnabled { get; }
+
+    IQueryable<T> ApplyCriteria(IQueryable<T> query);
     
 }
 

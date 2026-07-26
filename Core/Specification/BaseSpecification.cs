@@ -19,8 +19,14 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
 
     public bool IsDistinct { get; private set; } = false;
 
-    Expression<Func<T, bool>>? ISpecificationRepository<T>.Criteria => criteria;
+    public int PageSize { get; private set; }
 
+    public int PageIndex { get; private set; }
+
+    public bool IsPagingEnabled { get; private set; } = false;
+
+
+    Expression<Func<T, bool>>? ISpecificationRepository<T>.Criteria => criteria;
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
@@ -35,6 +41,23 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     protected void ApplyDistinct()
     {
         IsDistinct = true;
+    }
+
+    protected void ApplyPaging(int pageIndex, int pageSize)
+    {
+        PageIndex = pageIndex;
+        PageSize = pageSize;
+        IsPagingEnabled = true;
+    }
+
+    IQueryable<T> ISpecificationRepository<T>.ApplyCriteria(IQueryable<T> query)
+    {
+        if (criteria != null)
+        {
+            return query.Where(criteria);
+        }
+
+        return query;
     }
 }
 

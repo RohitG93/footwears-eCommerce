@@ -20,6 +20,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     Task<TResult?> GetEntityWithSpec<TResult>(ISpecificationRepository<T, TResult> spec);
     Task<IEnumerable<TResult>> ListAsync<TResult>(ISpecificationRepository<T, TResult> spec);
 
+    Task<int> CountAsAsync(ISpecificationRepository<T> spec);
+
 
 
 }
