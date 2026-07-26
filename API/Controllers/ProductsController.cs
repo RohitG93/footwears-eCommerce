@@ -3,36 +3,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Core.BusinessEntities;
 using Core.Interfaces;
+using Core.Specification;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")] 
-public class ProductsController(IProductRepository productRepository) : ControllerBase
+public class ProductsController(IGenericRepository<Product> productRepository) : ControllerBase
 {
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(string? brand, string? type, string? sort)
     {
-        return Ok(await productRepository.GetAllProductsAsync(brand, type, sort));
+        var productSpec = new ProductSpecification(brand, type, sort);
+
+        return Ok(await productRepository.GetAllDataWithSpecAsync(productSpec));
     }
 
     [HttpGet("brands")]
     public async Task<ActionResult<IEnumerable<string>>> GetAllProductBrands()
     {
-        return Ok(await productRepository.GetAllProductBrandsAsync());
+        //return Ok(await productRepository.GetAllProductBrandsAsync());
+
+        var productBrandSpec = new ProductBrandSpecification();
+
+        return Ok(await productRepository.ListAsync(productBrandSpec));
     }
 
     [HttpGet("types")]
     public async Task<ActionResult<IEnumerable<string>>> GetAllProductTypes()
     {
-        return Ok(await productRepository.GetAllProductTypesAsync());
+        //return Ok(await productRepository.GetAllProductTypesAsync());
+
+        var productTypeSpec = new ProductTypeSpecification();
+
+        return Ok(await productRepository.ListAsync(productTypeSpec));
+
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<IEnumerable<Product>>> GetProductById(int id)
     {
-        var product = await productRepository.GetProductByIdAsync(id);
+        var product = await productRepository.GetByIdAsync(id);
         if (product == null)
         {
             return NotFound();
@@ -43,7 +55,7 @@ public class ProductsController(IProductRepository productRepository) : Controll
     [HttpPost]
     public async Task<ActionResult<IEnumerable<Product>>> CreateProducts(Product product)
     {
-        productRepository.CreateProduct(product);
+        productRepository.Create(product);
         if(await productRepository.SaveChangesAsync())
         {
             return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
@@ -59,7 +71,7 @@ public class ProductsController(IProductRepository productRepository) : Controll
             return BadRequest("Product ID mismatch.");
         }
 
-        if (await productRepository.UpdateProductAsync(id, product))
+        if (await productRepository.UpdateAsync(id, product))
         {
             if (await productRepository.SaveChangesAsync())
             {
@@ -74,7 +86,7 @@ public class ProductsController(IProductRepository productRepository) : Controll
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
     {        
-        if (await productRepository.DeleteProductAsync(id))
+        if (await productRepository.DeleteAsync(id))
         {
             if (await productRepository.SaveChangesAsync())
             {
