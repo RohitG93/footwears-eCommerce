@@ -14,9 +14,7 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
     public async Task<ActionResult<Pagination<Product>>> GetAllProducts([FromQuery]ProductSpecParam productSpecParam)
     {
         var productSpec = new ProductSpecification(productSpecParam);
-        var productPaginationData = await CreatePagedResult(productRepository, productSpec,productSpecParam.PageIndex, productSpecParam.PageSize);
-
-        return Ok(productPaginationData);
+        return await CreatePagedResult(productRepository, productSpec,productSpecParam.PageIndex, productSpecParam.PageSize);
     }
 
     [HttpGet("brands")]
@@ -41,14 +39,14 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProductById(int id)
+    public async Task<ActionResult<Product>> GetProductById(int id)
     {
         var product = await productRepository.GetByIdAsync(id);
         if (product == null)
         {
             return NotFound();
         }
-        return Ok(product);
+        return product;
     }
 
     [HttpPost]
