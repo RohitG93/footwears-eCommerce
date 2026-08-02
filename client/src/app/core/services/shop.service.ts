@@ -41,6 +41,10 @@ export class ShopService {
             return this.httpClient.get<Pagination<Product>>(this.baseUrl + 'products', { params });
       }
 
+      getProductById(id: number) {
+            return this.httpClient.get<Product>(this.baseUrl + 'products/' + id);
+      }
+
       getBrands() {
             if (this.brandsList.length > 0) {
                   return;
