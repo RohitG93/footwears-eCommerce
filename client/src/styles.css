@@ -1,3 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+
+.container {
+    @apply mx-auto max-w-screen-2xl
+}
+
+.text-primary {
+    @apply text-blue-700
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Add a smooth transition for the shadow effect */
+.custom-shadow-btn {
+  transition: box-shadow 0.3s ease-in-out !important;
+}
+
+/* Apply the box-shadow strictly on hover */
+.custom-shadow-btn:hover {
+  box-shadow: 0px 4px 15px rgba(48, 4, 113, 0.15) !important;
+}

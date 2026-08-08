@@ -6,5 +6,5 @@ public class ShoppingCart
 {
     public required string id {get; set;}
 
-    public List<CartItem> CartItems {get; set;} = [];
+    public List<CartItem> cartItems {get; set;} = [];
 }

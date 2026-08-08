@@ -27,11 +27,11 @@
             </form>
 
             <div class="flex gap-3">
-                <button mat-stroked-button color="primary" (click)="openFilterDialog()">
+                <button matButton="outlined" class="custom-shadow-btn" color="primary" (click)="openFilterDialog()">
                     <mat-icon>filter_list</mat-icon>
                     Filter
                 </button>
-                <button mat-stroked-button color="primary" [matMenuTriggerFor]="sortMenu">
+                <button matButton="outlined" class="custom-shadow-btn" color="primary" [matMenuTriggerFor]="sortMenu">
                     <mat-icon>swap_vert</mat-icon>
                     Sort
                 </button>
