@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Middlewares;
 using StackExchange.Redis;
 using Infrastructure.services;
+using Core.BusinessEntities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(x =>
         return ConnectionMultiplexer.Connect(connStrig);
     });
 
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<StoreContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +52,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 try
 {
