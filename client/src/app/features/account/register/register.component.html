@@ -1,0 +1,61 @@
+<mat-card class="max-w-lg mx-auto mt-32 p-8 bg-white">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-semibold text-primary">Register</h1>
+        </div>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" type="text"
+                placeholder="ROHIT" style="padding-left: 15px !important;"/>
+                @if (registerForm.get('firstName')?.hasError('required'))
+                {
+                    <mat-error>First Name is required </mat-error>
+                }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-6">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" type="text"
+                placeholder="goyal" style="padding-left: 15px !important;"/>
+                @if (registerForm.get('lastName')?.hasError('required'))
+                {
+                    <mat-error>Last Name is required </mat-error>
+                }
+        </mat-form-field>
+         <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Email address</mat-label>
+            <input matInput formControlName="email" type="email"
+                placeholder="name@example.com" style="padding-left: 15px !important;"/>
+                @if (registerForm.get('email')?.hasError('required'))
+                {
+                    <mat-error>Email is required </mat-error>
+                }
+
+                @if (registerForm.get('email')?.hasError('email'))
+                {
+                    <mat-error>Email is invalid </mat-error>
+                }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-6">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password"
+                placeholder="Password" style="padding-left: 15px !important;"/>
+                @if (registerForm.get('password')?.hasError('required'))
+                {
+                    <mat-error>Password is required </mat-error>
+                }
+        </mat-form-field>
+
+        @if (validationErrors.length > 0) {
+            <div class="mb-3 p-4 bg-red-100 text-red-500">
+              <ul class="list-disc px-3">
+                @for (error of validationErrors; track error) {
+                  <li>{{error}}</li>
+                }
+              </ul>
+            </div>
+          }
+
+        <button [disabled]="registerForm.invalid" matButton="outlined" type="submit" color="primary"
+            class="w-full py-2">Register</button>
+    </form>
+</mat-card>
