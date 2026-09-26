@@ -7,13 +7,14 @@ using API.RequestHelpers;
 
 namespace API.Controllers;
 
-public class ProductsController(IGenericRepository<Product> productRepository) : BaseApiController
+public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
 
     [HttpGet]
     public async Task<ActionResult<Pagination<Product>>> GetAllProducts([FromQuery]ProductSpecParam productSpecParam)
     {
         var productSpec = new ProductSpecification(productSpecParam);
+        var productRepository = unit.Repository<Product>();
         return await CreatePagedResult(productRepository, productSpec,productSpecParam.PageIndex, productSpecParam.PageSize);
     }
 
@@ -24,7 +25,7 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
 
         var productBrandSpec = new ProductBrandSpecification();
 
-        return Ok(await productRepository.ListAsync(productBrandSpec));
+        return Ok(await unit.Repository<Product>().ListAsync(productBrandSpec));
     }
 
     [HttpGet("types")]
@@ -34,14 +35,14 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
 
         var productTypeSpec = new ProductTypeSpecification();
 
-        return Ok(await productRepository.ListAsync(productTypeSpec));
+        return Ok(await unit.Repository<Product>().ListAsync(productTypeSpec));
 
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProductById(int id)
     {
-        var product = await productRepository.GetByIdAsync(id);
+        var product = await unit.Repository<Product>().GetByIdAsync(id);
         if (product == null)
         {
             return NotFound();
@@ -52,6 +53,7 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
     [HttpPost]
     public async Task<ActionResult<IEnumerable<Product>>> CreateProducts(Product product)
     {
+        var productRepository = unit.Repository<Product>();
         productRepository.Create(product);
         if(await productRepository.SaveChangesAsync())
         {
@@ -68,6 +70,7 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
             return BadRequest("Product ID mismatch.");
         }
 
+        var productRepository = unit.Repository<Product>();
         if (await productRepository.UpdateAsync(id, product))
         {
             if (await productRepository.SaveChangesAsync())
@@ -83,9 +86,9 @@ public class ProductsController(IGenericRepository<Product> productRepository) :
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
     {        
-        if (await productRepository.DeleteAsync(id))
+        if (await unit.Repository<Product>().DeleteAsync(id))
         {
-            if (await productRepository.SaveChangesAsync())
+            if (await unit.Repository<Product>().SaveChangesAsync())
             {
                 return NoContent();
             }

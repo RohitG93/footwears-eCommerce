@@ -3,6 +3,7 @@
 using System.Net.NetworkInformation;
 using Core.BusinessEntities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
@@ -35,6 +36,12 @@ public class SpecificationEvaluator<T> where T : BaseEntity
         {
             query = query.Skip(spec.PageSize * (spec.PageIndex - 1)).Take(spec.PageSize);
         }
+
+         query = spec.Includes.Aggregate(query, (current, include) =>
+            current.Include(include));
+
+        query = spec.IncludeStrings.Aggregate(query, (current, include) =>
+            current.Include(include));
 
         return query;
     }

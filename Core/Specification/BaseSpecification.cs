@@ -25,9 +25,21 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
 
     public bool IsPagingEnabled { get; private set; } = false;
 
+    public List<Expression<Func<T, object>>> Includes {get; private set;} = new List<Expression<Func<T, object>>>();
+
+    public List<string> IncludeStrings {get; private set;} = new List<string>(); // For ThenInclude
 
     Expression<Func<T, bool>>? ISpecificationRepository<T>.Criteria => criteria;
 
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+
+    protected void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString); // For ThenInclude
+    }
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
         OrderBy = orderByExpression;

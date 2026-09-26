@@ -6,7 +6,7 @@ import { MatFormField, MatLabel } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-order-summary',
@@ -25,4 +25,5 @@ import { RouterLink } from '@angular/router';
 })
 export class OrderSummaryComponent {
   cartService = inject(CartService)
+  router = inject(Router);
 }

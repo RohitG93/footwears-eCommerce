@@ -5,6 +5,7 @@ using API.Middlewares;
 using StackExchange.Redis;
 using Infrastructure.services;
 using Core.BusinessEntities;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,9 @@ builder.Services.AddDbContext<StoreContext>(options =>
 });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddCors();
 builder.Services.AddSingleton<IConnectionMultiplexer>(x =>
     {

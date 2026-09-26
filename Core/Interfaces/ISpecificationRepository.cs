@@ -11,6 +11,9 @@ public interface ISpecificationRepository<T>
 
     Expression<Func<T, object>>? OrderByDescending { get; }
 
+    List<Expression<Func<T, object>>> Includes { get; }
+    List<string> IncludeStrings { get; } // For ThenInclude
+
     bool IsDistinct { get; }
 
     int PageSize { get; }
@@ -19,8 +22,7 @@ public interface ISpecificationRepository<T>
 
     bool IsPagingEnabled { get; }
 
-    IQueryable<T> ApplyCriteria(IQueryable<T> query);
-    
+    IQueryable<T> ApplyCriteria(IQueryable<T> query);    
 }
 
 public interface ISpecificationRepository<T, TResult> : ISpecificationRepository<T>
