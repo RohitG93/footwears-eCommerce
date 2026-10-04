@@ -13,6 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Pagination } from '../../shared/Models/pagination';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel } from "@angular/material/select";
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-shop',
@@ -26,7 +27,7 @@ import { MatFormField, MatLabel } from "@angular/material/select";
     MatMenuTrigger,
     MatPaginator,
     FormsModule,
-],
+    EmptyStateComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss',
 })
@@ -52,6 +53,11 @@ export class ShopComponent implements OnInit {
       this.shopService.getBrands();
       this.shopService.getTypes();
 
+      this.getProductsData();
+  }
+
+  resetFilters(): void {
+      this.shopParams = new ShortParams();
       this.getProductsData();
   }
 
